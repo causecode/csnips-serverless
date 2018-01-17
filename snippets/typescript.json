@@ -7,6 +7,20 @@
         "description": "Snippet for Arrow Function"
     },
 
+    "Create Empty Lambda": {
+        "prefix": "lambda",
+        "body": [
+            "/**\n * ${1: Explain what the lambda function does}",
+            " * Endpoint - ${2|GET,POST,PUT,DELETE|} /${3:endpoint}",
+            " *\n * @param {string} ",
+            " * @returns {IHttpResponse} ",
+            " *\n * @since ${4:0.0.1}\n * @author ${5:authorName}\n */",
+            "export const ${6:functionName}: Handler = (event: ${7:APIGatewayEvent}, context: Context, callback: Callback): void => {",
+            "\t${0}\n};\n"
+        ],
+        "description": "Snippet for Empty Endpoint Lambda"
+    },
+
     "Create Endpoint Lambda": {
         "prefix": "create",
         "body": [

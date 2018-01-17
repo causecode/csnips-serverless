@@ -6,6 +6,7 @@ This VS Code extension adds snippets for Serverless in your editor for typescrip
 
 | Snippet             | Purpose                                    |
 |---------------------|--------------------------------------------|
+| `lambda`            | Snippet for Empty Endpoint Lambda          |
 | `create`            | Snippet for Create Endpoint Lambda         |
 | `list`              | Snippet for List Endpoint Lambda           |
 | `get`               | Snippet for Get Endpoint Lambda            |
