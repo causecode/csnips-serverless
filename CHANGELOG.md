@@ -6,3 +6,4 @@
     - Create, List, Get, Update, Delete Endpoint Lambda
     - Unroll, it, describe for jest
     - Arrow Function
+    - `called`, `equal`, `falsy` and `truthy` for expect

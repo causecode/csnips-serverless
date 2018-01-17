@@ -19,7 +19,11 @@ This VS Code extension adds snippets for Serverless in your editor for typescrip
 | `arrow`             | Snippet for Arrow Function                 |
 | `it`                | Snippet for it (testing)                   |
 | `unroll`            | Snippet for unroll (testing)               |
-| `describe`          | Snippet for describe (testing)             |
+| `describe`          | Snippet for Jest test suite                |
+| `called`            | Snippet for Expect to be called            |
+| `equal `            | Snippet for Expect to equal                |
+| `truthy`            | Snippet for Expect to be truthy            |
+| `falsy`             | Snippet for Expect to be falsy             |
 
 Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to activate snippets from within the editor.
 
@@ -36,6 +40,10 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 ##Contribute
 
 This is an open source project and if you want to contribute, feel free to create issue in our [repository](https://github.com/causecode/snips-serverless) or create pull requests.
+
+## Licence
+
+MIT
 
 
 **Enjoy!**
