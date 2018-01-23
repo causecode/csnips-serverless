@@ -1,0 +1,333 @@
+{
+    "Arrow Function": {
+        "prefix": "arrow",
+        "body": [
+            "(${1:arguments}) => ${2:statement}"
+        ],
+        "description": "Snippet for Arrow Function"
+    },
+
+    "Create Empty Lambda": {
+        "prefix": "lambda",
+        "body": [
+            "/**\n * ${1: Explain what the lambda function does}",
+            " * Endpoint - ${2|GET,POST,PUT,DELETE|} /${3:endpoint}",
+            " *\n * @param {string} ",
+            " * @returns {IHttpResponse} ",
+            " *\n * @since ${4:0.0.1}\n * @author ${5:authorName}\n */",
+            "export const ${6:functionName}: Handler = (event: ${7:APIGatewayEvent}, context: Context, callback: Callback): void => {",
+            "\t${0}\n};\n"
+        ],
+        "description": "Snippet for Empty Endpoint Lambda"
+    },
+
+    "Create Endpoint Lambda": {
+        "prefix": "create",
+        "body": [
+            "/**\n * Creates a ${TM_FILENAME_BASE} instance and stores in the database",
+            " * Endpoint - POST /${1:${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}",
+            " *\n * @param {string} event.body - The set of new key-value pairs to update in the ${TM_FILENAME_BASE}",
+            " * @returns {IHttpResponse} success true if created, else false and error description",
+            " *\n * @since ${2:0.0.1}\n * @author ${3:authorName}\n */",
+            "export const create${TM_FILENAME_BASE}: Handler = (event: APIGatewayEvent, context: Context, callback: Callback): void => {",
+            "\tcontext.callbackWaitsForEmptyEventLoop = false;\n",
+            "\tconst params: I${TM_FILENAME_BASE}Attributes = parseBody(event.body as string);\n",
+            "\tif (!params) {",
+            "\t\tcallback(null, makeResponse({success: false, message: 'No request body'}, 400));",
+            "\t\treturn;\n\t}\n",
+            "\t${TM_FILENAME_BASE}Service.create(params)",
+            "\t\t.then((): void => {",
+            "\t\t\tcallback(null, makeResponse({success: true, message: '${TM_FILENAME_BASE} created successfully'}, 201));",
+            "\t\t})\n\t\t.catch((e: Error): void => {",
+            "\t\t\tcallback(null, makeResponse({success: false, message: e.message}, 500));\n\t\t});\n};\n"
+        ],
+        "description": "Snippet for Create Endpoint Lambda"
+    },
+
+    "List Endpoint Lambda": {
+        "prefix": "list",
+        "body": [
+            "/**\n * List all ${TM_FILENAME_BASE} instance with pagination support",
+            " * Endpoint - GET /${1:${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}",
+            " *\n * @param {string} event.queryStringParameters.offset",
+            " * @param {string} event.queryStringParameters.max",
+            " * @param {string} event.queryStringParameters.sort - ascending / descending",
+            " * @param {string} event.queryStringParameters.query - query for search / autocomplete on readableId",
+            " * @returns {IHttpResponse} instances (or empty array) if success, else error",
+            " *\n * @since ${2:0.0.1}\n * @author ${3:authorName}\n */",
+            "export const list${TM_FILENAME_BASE}: Handler =",
+            "\t\t(event: IListQueryParams & APIGatewayEvent, context: Context, callback: Callback): void => {\n",
+            "\tcontext.callbackWaitsForEmptyEventLoop = false;\n",
+            "\tconst max: number = event.queryStringParameters && event.queryStringParameters.max || MAX;",
+            "\tconst offset: number = event.queryStringParameters && event.queryStringParameters.offset || OFFSET;",
+            "\tconst query: string = event.queryStringParameters && event.queryStringParameters.query || QUERY;",
+            "\tconst sort: string = event.queryStringParameters && event.queryStringParameters.sort || SORT;\n",
+            "\t${TM_FILENAME_BASE}Service.list(query, max, offset, sort)",
+            "\t\t.then((result: {rows: I${TM_FILENAME_BASE}Instance[], count: number}): void => {",
+            "\t\t\tcallback(null, makeResponse({",
+            "\t\t\t\tsuccess: true,",
+            "\t\t\t\tinstanceList: result.rows,",
+            "\t\t\t\ttotalCount: result.count,",
+            "\t\t\t}));\n\t\t})",
+            "\t\t.catch((e: Error): void => {",
+            "\t\t\tcallback(null, makeResponse({success: false, message: e.message}, 500));",
+            "\t\t});\n};\n"
+        ],
+        "description": "Snippet for List Endpoint Lambda"
+    },
+
+    "Get Endpoint Lambda": {
+        "prefix": "get",
+        "body": [
+            "/**\n * Gets a particular ${TM_FILENAME_BASE} instance by it's ID",
+            " * Endpoint - GET /${1:${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}/{id}",
+            " *\n * @param {string} event.pathParameters.id - The ID of the ${TM_FILENAME_BASE} to get",
+            " * @returns {IHttpResponse} ${TM_FILENAME_BASE} instance if success, else error",
+            " *\n * @since ${2:0.0.1}\n * @author ${3:authorName}\n */",
+            "export const get${TM_FILENAME_BASE}: Handler =",
+            "\t\t(event: IListPathParams & APIGatewayEvent, context: Context, callback: Callback): void => {\n",
+            "\tcontext.callbackWaitsForEmptyEventLoop = false;\n",
+            "\tif(!event.pathParameters || !event.pathParameters.id) {",
+            "\t\tcallback(null, makeResponse({success: false, message: 'Please provide a ${TM_FILENAME_BASE} ID'}, 400));",
+            "\t\treturn;\n\t}\n",
+            "\t${TM_FILENAME_BASE}Service.findById(event.pathParameters.id)",
+            "\t\t.then((${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}: I${TM_FILENAME_BASE}Instance): void => {",
+            "\t\t\tif (!${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}) {",
+            "\t\t\t\tcallback(null, makeResponse({success: false, message: 'No such ${TM_FILENAME_BASE}'}, 404));",
+            "\t\t\t} else {",
+            "\t\t\t\tcallback(null, makeResponse({success: true, ${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}Instance: ${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}));",
+            "\t\t\t}\n\t\t})",
+            "\t\t.catch((e: Error): void => {",
+            "\t\t\tcallback(null, makeResponse({success: false, message: e.toString()}, 500));",
+            "\t\t});\n};\n"
+        ],
+        "description": "Snippet for Get Endpoint Lambda"
+    },
+
+    "Update Endpoint Lambda": {
+        "prefix": "update",
+        "body": [
+            "/**\n * Updates a ${TM_FILENAME_BASE} by taking all the parameters in request body and applying them to the existing ${TM_FILENAME_BASE}.",
+            " * Endpoint - PUT /${1:${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}/{id}",
+            " *",
+            " * @param {string} event.pathParameters.id - The ID of the ${TM_FILENAME_BASE} to update",
+            " * @param {string} event.body - The set of new key-value pairs to update in the ${TM_FILENAME_BASE}",
+            " * @returns {IHttpResponse} success true if updated, else false and error description",
+            " *\n * @since ${2:0.0.1}\n * @author ${3:authorName}\n */",
+            "export const update${TM_FILENAME_BASE}: Handler =",
+            "\t\t(event: IListPathParams & APIGatewayEvent, context: Context, callback: Callback): void => {\n",
+            "\tcontext.callbackWaitsForEmptyEventLoop = false;\n",
+            "\tif(!event.pathParameters || !event.pathParameters.id) {",
+            "\t\tcallback(null, makeResponse({success: false, message: 'Please provide a ${TM_FILENAME_BASE} ID'}, 400));",
+            "\t\treturn;",
+            "\t}\n\n\tconst params: IUpdate${TM_FILENAME_BASE}Body = parseBody(event.body as string);",
+            "\tif (!params) {",
+            "\t\tcallback(null, makeResponse({success: false, message: 'No request body'}, 400));",
+            "\t\treturn;",
+            "\t}\n\n\t${TM_FILENAME_BASE}Service.updateById(event.pathParameters.id, params)",
+            "\t\t.then((): void => {",
+            "\t\t\tcallback(null, makeResponse({",
+            "\t\t\t\tsuccess: true,",
+            "\t\t\t\tmessage: '${TM_FILENAME_BASE} successfully updated'",
+            "\t\t\t}));\n\t\t})",
+            "\t\t.catch((e: Error): void => {",
+            "\t\t\tcallback(null, makeResponse({success: false, message: e.message}, 500));",
+            "\t\t});\n};\n"
+        ],
+        "description": "Snippet for Update Endpoint Lambda"
+    },
+
+    "Delete Endpoint Lambda": {
+        "prefix": "delete",
+        "body": [
+            "/**\n * Deletes a ${TM_FILENAME_BASE} by it's ID",
+            " * Endpoint - DELETE /${1:${TM_FILENAME/(.*)\\.ts/${1:/downcase}/}}/{id}",
+            " *\n * @param {string} event.pathParameters.id - The ID of the ${TM_FILENAME_BASE} to delete",
+            " * @returns {IHttpResponse} success true if deleted, else false and error description",
+            " *\n * @since 0.0.2\n * @author Risabh Kumar\n */",
+            "export const delete${TM_FILENAME_BASE}: Handler =",
+            "\t\t(event: IListPathParams & APIGatewayEvent, context: Context, callback: Callback): void => {\n",
+            "\tcontext.callbackWaitsForEmptyEventLoop = false;\n",
+            "\tif(!event.pathParameters || !event.pathParameters.id) {",
+            "\t\tcallback(null, makeResponse({success: false, message: 'Please provide an ${TM_FILENAME_BASE} ID'}, 400));",
+            "\t\treturn;\n\t}\n\n\t${TM_FILENAME_BASE}Service.deleteById(event.pathParameters.id)",
+            "\t\t.then((): void => {",
+            "\t\t\tcallback(null, makeResponse({success: true, message: '${TM_FILENAME_BASE} deleted'}, 200));",
+            "\t\t})\n\t\t.catch((e: Error): void => {",
+            "\t\t\tcallback(null, makeResponse({success: false, message: e.toString()}, 500));",
+            "\t\t});\n};\n"
+        ],
+        "description": "Snippet for Delete Endpoint Lambda"
+    },
+
+    "Test for Create Endpoint Lambda": {
+        "prefix": "testcreate",
+        "body": [
+            "describe('Test for create${TM_FILENAME/(.*)\\.test.ts/${1}/}', (): void => {",
+            "\tunroll('it should return #expectedStatus HTTP status when #description', (",
+            "\t\t\tdone: () => void,",
+            "\t\t\targs: {inputBody: I${TM_FILENAME/(.*)\\.test.ts/${1}/}Attributes, expectedStatus: number}",
+            "\t): void => {\n\t\tcreate${TM_FILENAME/(.*)\\.test.ts/${1}/}(",
+            "\t\t\t{body: JSON.stringify(args.inputBody)},",
+            "\t\t\tmockContext,",
+            "\t\t\t(err: Error, response: IHttpResponse) => {\n",
+            "\t\texpect(response.statusCode).toEqual(args.expectedStatus);",
+            "\t\tdone();\n\t\t});\n\t}, [",
+            "\t\t['inputBody', 'expectedStatus', 'description'],",
+            "\t\t[{name: 'test', readableId: 'valid'}, 201, 'valid params are passed'],",
+            "\t\t[{readableId: 'valid'}, 500, 'name is not passed'],",
+            "\t\t[{name: 'test', readableId: 'invalid'}, 500, 'invalid readableId is passed'],",
+            "\t\t[null, 400, 'no body is passed']\n\t]);\n})\n"
+        ],
+        "description": "Snippet for testing Create Endpoint Lambda"
+    },
+
+    "Test for List Endpoint Lambda": {
+        "prefix": "testlist",
+        "body": [
+            "describe('Test for list${TM_FILENAME/(.*)\\.test.ts/${1}/}', (): void => {",
+            "\tunroll('it should return #expectedStatus when #description', (",
+            "\t\t\tdone: () => void,",
+            "\t\t\targs: {queryStringParameters: {query: string}, expectedStatus: number, description: string}",
+            "\t): void => {\n\t\tlist${TM_FILENAME/(.*)\\.test.ts/${1}/}(\n\t\t\t{",
+            "\t\t\t\tqueryStringParameters: args.queryStringParameters",
+            "\t\t\t},\n\t\t\tmockContext,",
+            "\t\t\t(err: Error, response: any): void => {",
+            "\t\t\t\tif (args.expectedStatus === 200) {",
+            "\t\t\t\t\tconst responseBody = JSON.parse(response.body);",
+            "\t\t\t\t\texpect(responseBody.success).toBe(true);",
+            "\t\t\t\t\texpect(responseBody.instanceList).toBeDefined();\n\t\t\t\t}",
+            "\t\t\t\texpect(response.statusCode).toEqual(args.expectedStatus);",
+            "\t\t\t}\n\t\t)\n\t\tdone();\n\t}, [",
+            "\t\t['queryStringParameters', 'expectedStatus', 'description'],",
+            "\t\t[{}, 500, 'error occurs'],",
+            "\t\t[{query: 'match'}, 200, 'match is found']\n\t])\n});\n"
+        ],
+        "description": "Snippet for testing List Endpoint Lambda"
+    },
+
+    "Test for Get Endpoint Lambda": {
+        "prefix": "testget",
+        "body": [
+            "describe('Test for get${TM_FILENAME/(.*)\\.test.ts/${1}/}', (): void => {",
+            "\tunroll('it should #expectedStatus when #description', (",
+            "\t\t\tdone: () => void,",
+            "\t\t\targs: {id: number, expectedStatus: number, description: string}",
+            "\t): void => {\n\t\tget${TM_FILENAME/(.*)\\.test.ts/${1}/}(",
+            "\t\t\t{\n\t\t\t\tpathParameters: {id: args.id},",
+            "\t\t\t},\n\t\t\tmockContext,",
+            "\t\t\t(err: Error, response: any) => {",
+            "\t\t\t\texpect(response.statusCode).toEqual(args.expectedStatus);",
+            "\t\t\t}\n\t\t)\n\t\tdone();\n\t}, [\n\t\t['id', 'expectedStatus', 'description'],",
+            "\t\t[1, 200, 'valid data is passed'],",
+            "\t\t[-1, 500, 'invalid id is passed'],",
+            "\t\t[100, 500, 'non existent id is passed'],",
+            "\t\t[undefined, 400, 'no id is passed'],\n\t])\n});\n"
+        ],
+        "description": "Snippet for testing Get Endpoint Lambda"
+    },
+
+    "Test for Update Endpoint Lambda": {
+        "prefix": "testupdate",
+        "body": [
+            "describe('Test for update${TM_FILENAME/(.*)\\.test.ts/${1}/}', (): void => {",
+            "\tconst dummy${TM_FILENAME/(.*)\\.test.ts/${1}/}Data = {\n\t\treadableId: 'test',",
+            "\t\taddressLine1: 'test',\n\t\tcity: 'test',\n\t}",
+            "\tunroll('it should #expectedStatus when #description', (",
+            "\t\t\tdone: () => void,",
+            "\t\t\targs: {id: number, inputBody: IUpdate${TM_FILENAME/(.*)\\.test.ts/${1}/}Body, expectedStatus: number, description: string}",
+            "\t): void => {\n\t\tupdate${TM_FILENAME/(.*)\\.test.ts/${1}/}(",
+            "\t\t\t{\n\t\t\t\tbody: JSON.stringify(args.inputBody),",
+            "\t\t\t\tpathParameters: {id: args.id},\n\t\t\t},",
+            "\t\t\tmockContext,\n\t\t\t(err: Error, response: any) => {",
+            "\t\t\t\texpect(response.statusCode).toEqual(args.expectedStatus);",
+            "\t\t\t}\n\t\t)\n\t\tdone();\n\t}, [",
+            "\t\t['id', 'inputBody', 'expectedStatus', 'description'],",
+            "\t\t[1, dummy${TM_FILENAME/(.*)\\.test.ts/${1}/}Data, 200, 'valid id is passed with valid data'],",
+            "\t\t[-1, dummy${TM_FILENAME/(.*)\\.test.ts/${1}/}Data, 500, 'invalid id is passed with valid data'],",
+            "\t\t[undefined, dummy${TM_FILENAME/(.*)\\.test.ts/${1}/}Data, 400, 'no id is passed'],",
+            "\t\t[1, null, 400, 'no data is passed'],\n\t])\n});\n"
+        ],
+        "description": "Snippet for testing Update Endpoint Lambda"
+    },
+
+    "Test for Delete Endpoint Lambda": {
+        "prefix": "testdelete",
+        "body": [
+            "describe('Test for delete${TM_FILENAME/(.*)\\.test.ts/${1}/}', (): void => {",
+            "\tunroll('it should #expectedStatus when #description', (\n\t\t\tdone: () => void,",
+            "\t\t\targs: {id: number, expectedStatus: number, description: string}",
+            "\t): void => {\n\t\tdelete${TM_FILENAME/(.*)\\.test.ts/${1}/}(",
+            "\t\t\t{\n\t\t\t\tpathParameters: {id: args.id},",
+            "\t\t\t},\n\t\t\tmockContext,",
+            "\t\t\t(err: Error, response: any) => {",
+            "\t\t\t\texpect(response.statusCode).toEqual(args.expectedStatus);",
+            "\t\t\t}\n\t\t)\n\t\tdone();\n\t}, [",
+            "\t\t['id', 'expectedStatus', 'description'],",
+            "\t\t[1, 200, 'valid data is passed'],",
+            "\t\t[-1, 500, 'invalid id is passed'],",
+            "\t\t[100, 500, 'non existent id is passed'],",
+            "\t\t[undefined, 400, 'no id is passed'],\n\t])\n});\n"
+        ],
+        "description": "Snippet for testing Delete Endpoint Lambda"
+    },
+
+    "Unroll for jest": {
+        "prefix": "unroll",
+        "body": [
+            "unroll('it should ${1:test message here}', (",
+            "\t\tdone: () => void,",
+            "\t\targs: {${2:argument: type}\\}",
+            "): void => {",
+            "\t${3}",
+            "\tdone();",
+            "}, [ // tslint:disable-next-line",
+            "\t[${0}],",
+            "\t[],",
+            "\t[],",
+            "]);\n"
+        ],
+        "description": "Snippet for unroll (testing)"
+    },
+
+    "Test case for Jest": {
+        "prefix": "it",
+        "body": [
+            "it('should ${1:test message here}', (): void => {",
+            "\t${2}",
+            "\t${3}",
+            "});\n"
+        ],
+        "description": "Snippet for it (testing)"
+    },
+
+    "Describe for jest": {
+        "prefix": "describe",
+        "body": [
+            "describe('Tests for ${1:MODULE NAME}', (): void => {",
+            "\t${0}",
+            "})"
+        ],
+        "description": "Snippet for Jest test suite"
+    },
+
+    "Expect to be called": {
+        "prefix": "called",
+        "body": "expect($1).toBeCalled();"
+    },
+
+    "Expect to equal": {
+        "prefix": "equal",
+        "body": "expect($1).toEqual();"
+    },
+
+    "Expect to be truthy": {
+        "prefix": "truthy",
+        "body": "expect($1).toBeTruthy();"
+    },
+
+    "Expect to be falsy": {
+        "prefix": "falsy",
+        "body": "expect($1).toBeFalsy();"
+    }
+}
